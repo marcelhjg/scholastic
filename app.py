@@ -44,6 +44,7 @@ st.markdown(
         display: grid;
         grid-template-columns: 1fr auto;
         gap: 2rem;
+        align-items: center;
     }
 
     .title-group {
@@ -82,65 +83,31 @@ st.markdown(
     }
 
     .student-info {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1rem;
-        margin-top: 1.75rem;
-    }
-
-    .student-meta {
-        display: grid;
-        gap: 0.75rem;
         background: #F8FAFF;
         border-radius: 18px;
-        padding: 1rem;
+        padding: 1.25rem;
         border: 1px solid rgba(226, 232, 240, 0.9);
+        display: grid;
+        gap: 0.85rem;
     }
 
-    .student-meta-item {
+    .student-info-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
+        padding: 0.35rem 0;
     }
 
-    .student-meta-item span:first-child {
+    .student-info-row .label {
         color: var(--rtu-muted);
-        font-size: 0.92rem;
+        font-size: 0.88rem;
     }
 
-    .student-meta-item span:last-child {
+    .student-info-row .value {
         color: var(--rtu-text);
         font-weight: 700;
         font-size: 0.95rem;
-    }
-
-    .header-grid-right {
-        display: grid;
-        gap: 1rem;
-        min-width: 210px;
-    }
-
-    .clock-panel {
-        background: #F8FAFF;
-        border-radius: 18px;
-        padding: 1rem 1.2rem;
-        border: 1px solid rgba(226, 232, 240, 0.9);
-        text-align: right;
-    }
-
-    .clock-panel strong {
-        display: block;
-        color: var(--rtu-muted);
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .clock-panel p {
-        margin: 0;
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: var(--rtu-text);
     }
 
     .header-note {
@@ -178,6 +145,7 @@ st.markdown(
         padding: 1.6rem;
         box-shadow: var(--rtu-shadow);
         border: 1px solid rgba(226, 232, 240, 0.9);
+        margin-top: 2.5rem;
     }
 
     .section-title {
@@ -344,21 +312,21 @@ summary_cards = [
 schedule_data = {
     "Monday": [
         {
-            "time": "07:00 – 09:00",
+            "time": "7:00 AM – 9:00 AM",
             "subject": "ITP221 - Networking 1",
             "room": "E501",
             "code": "2220081",
             "color": "#003C8F",
         },
         {
-            "time": "09:00 – 12:00",
+            "time": "9:00 AM – 12:00 PM",
             "subject": "ITP220 - Quantitative Methods",
             "room": "E305",
             "code": "2220080",
             "color": "#1D4ED8",
         },
         {
-            "time": "13:00 – 16:00",
+            "time": "1:00 PM – 4:00 PM",
             "subject": "ITP221L - Networking 1 Laboratory",
             "room": "E501",
             "code": "2220082",
@@ -369,28 +337,28 @@ schedule_data = {
     "Wednesday": [],
     "Thursday": [
         {
-            "time": "07:00 – 10:00",
+            "time": "7:00 AM – 10:00 AM",
             "subject": "ITP224L - Multimedia Production and Design Laboratory",
             "room": "E508",
             "code": "2220088",
             "color": "#003C8F",
         },
         {
-            "time": "10:00 – 12:00",
+            "time": "10:00 AM – 12:00 PM",
             "subject": "ITP224 - Multimedia Production and Design",
             "room": "E208",
             "code": "2220087",
             "color": "#1D4ED8",
         },
         {
-            "time": "13:00 – 16:00",
+            "time": "1:00 PM – 4:00 PM",
             "subject": "ITP223L - Computer Graphics Laboratory",
             "room": "E206",
             "code": "2220086",
             "color": "#0F766E",
         },
         {
-            "time": "16:00 – 18:00",
+            "time": "4:00 PM – 6:00 PM",
             "subject": "ITP223 - Computer Graphics",
             "room": "E501",
             "code": "2220085",
@@ -400,21 +368,21 @@ schedule_data = {
     "Friday": [],
     "Saturday": [
         {
-            "time": "07:00 – 09:00",
+            "time": "7:00 AM – 9:00 AM",
             "subject": "ITP222 - Integrative Programming and Tech 1",
             "room": "E409",
             "code": "2220083",
             "color": "#003C8F",
         },
         {
-            "time": "09:00 – 12:00",
+            "time": "9:00 AM – 12:00 PM",
             "subject": "ITP222L - Integrative Programming and Tech 1 Lab",
             "room": "E206",
             "code": "2220084",
             "color": "#2563EB",
         },
         {
-            "time": "13:00 – 15:00",
+            "time": "1:00 PM – 3:00 PM",
             "subject": "PE04 - Physical Activities Towards Health and Fitness II",
             "room": "E501",
             "code": "2220089",
@@ -424,19 +392,26 @@ schedule_data = {
 }
 
 schedule_slots = [
-    "07:00 – 09:00",
-    "09:00 – 12:00",
-    "13:00 – 16:00",
-    "16:00 – 18:00",
+    "7:00 AM – 9:00 AM",
+    "9:00 AM – 12:00 PM",
+    "1:00 PM – 4:00 PM",
+    "4:00 PM – 6:00 PM",
 ]
 
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
-current_time = datetime.now().strftime("%A, %B %d · %I:%M %p")
-
 st.markdown("""
     <div class='content-wrapper'>
 """, unsafe_allow_html=True)
+
+student_info_html = ""
+for item in schedule_header["student_info"]:
+    student_info_html += (
+        f"<div class='student-info-row'>"
+        f"<span class='label'>{item['label']}</span>"
+        f"<span class='value'>{item['value']}</span>"
+        f"</div>"
+    )
 
 st.markdown(
     f"""
@@ -447,34 +422,9 @@ st.markdown(
                 <h1>{schedule_header['title']}</h1>
                 <p>{schedule_header['subtitle']}</p>
                 <div class='header-accent'></div>
-                <div class='student-info'>
-    """,
-    unsafe_allow_html=True,
-)
-
-for item in schedule_header["student_info"]:
-    st.markdown(
-        f"""
-            <div class='student-meta'>
-                <div class='student-meta-item'>
-                    <span>{item['label']}</span>
-                    <span>{item['value']}</span>
-                </div>
             </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-st.markdown(
-    f"""
-                </div>
-            </div>
-            <div class='header-grid-right'>
-                <div class='clock-panel'>
-                    <strong>Current Local Time</strong>
-                    <p>{current_time}</p>
-                </div>
-                <p class='header-note'>This page shows the student’s course schedule for a professional university academic portal.</p>
+            <div class='student-info'>
+                {student_info_html}
             </div>
         </div>
     </div>
@@ -528,9 +478,7 @@ for slot in schedule_slots:
                 f"<td class='day-cell'><div class='schedule-card' style='border-left: 4px solid {entry['color']};'>"
                 f"<div class='schedule-badge' style='background:{entry['color']};'>{entry['code']}</div>"
                 f"<h4>{entry['subject']}</h4>"
-                f"<p>Room {entry['room']}</p>"
-                f"<p>{entry['time']}</p>"
-                f"<span class='subject-tag'>{day}</span>"
+                f"<p style='margin-top:0.85rem; font-weight:700; color: var(--rtu-text);'>{entry['room']}</p>"
                 f"</div></td>"
             )
         else:
